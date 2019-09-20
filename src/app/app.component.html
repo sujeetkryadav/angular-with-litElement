@@ -1,6 +1,6 @@
 
 <div class="field-wrapper">
-  <autocomplete-component [width]="200"
+  <autocomplete-component [width]="400"
                           [url]="url"
                           [placeholder]="'Please select a client'"
                           (on-change)="onChanged($event)">
@@ -10,7 +10,8 @@
     <dropdown-search-component
       [url]="serviceUrl"
       [placeholder]="'Please select a service'"
-      [width]="200">
+      [width]="400"
+      (on-change)="onChangeService($event)">
 
     </dropdown-search-component>
 </div>
@@ -18,7 +19,8 @@
   <dropdown-search-component
     [url]="recipientUrl"
     [placeholder]="'Please select a recipient'"
-    [width]="200">
+    [width]="400"
+    (on-change)="onChangeRecipient($event)">
 
   </dropdown-search-component>
 </div>

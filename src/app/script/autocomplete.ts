@@ -71,12 +71,13 @@ class AutocompleteWebComponent extends LitElement {
              right: 0;
              left: 0;
              width: inherit;
+             margin-left: 10px;
         }
         #close-icon {
           color: #4a4a4a;
           font-family: 'Helvetica', 'Arial', sans-serif;
           text-align: right;
-          width: inherit;
+          width: 20px;
           height: 20px;
           border-radius: 1px;
           position: absolute;
@@ -85,7 +86,7 @@ class AutocompleteWebComponent extends LitElement {
       }
       </style>
       <div class="autocom-container" style="width: ${this.width}px">
-       ${this.isSet ? html`<div id="close-icon" @click=${this.clearField}>
+       ${this.isSet ? html`<div id="close-icon" @click=${this.clearField} style="left: ${this.width - 10}px;">
          <span id="x">X</span>
       </div>` : ''}
       <input name="autocom" placeholder=${this.placeholder} .value="${this.selectedItem}" class="autocom" type="text" @keyup=${this.handleKeyEvent}>
@@ -99,7 +100,7 @@ class AutocompleteWebComponent extends LitElement {
   }
   handleKeyEvent($event) {
     const self = this;
-    const url = this.url + $event.target.value;
+    const url = this.url;
     const xhttp = new XMLHttpRequest();
     xhttp.open('GET', url , true);
     xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');

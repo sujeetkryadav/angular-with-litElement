@@ -8,7 +8,7 @@ import './script/dropdown-search-component';
 })
 export class AppComponent {
   title = 'angular-and-polymer';
-  url = 'http://scp-services-fit2.avs.adp.com/clientOnboarding/core/v2/clients/basicinfo?$contains=clientid&$id=';
+  url = 'https://jsonplaceholder.typicode.com/users/';
   isSelected = false;
   serviceUrl: string;
   recipientUrl: string;
@@ -18,7 +18,14 @@ export class AppComponent {
   onChanged($event) {
     console.log('Changed', $event.detail);
     this.isSelected = true;
-    this.serviceUrl = 'https://jsonplaceholder.typicode.com/users/' + $event.detail.id;
-    this.recipientUrl = 'https://jsonplaceholder.typicode.com/users/' + $event.detail.id;
+    this.serviceUrl = 'https://jsonplaceholder.typicode.com/users/';
+    this.recipientUrl = 'https://jsonplaceholder.typicode.com/users/';
+  }
+
+  onChangeService($event) {
+    console.log($event);
+  }
+  onChangeRecipient($event) {
+    console.log($event);
   }
 }
