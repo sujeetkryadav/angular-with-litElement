@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import './script/autocomplete';
 import './script/dropdown-search-component';
+import './script/input-tags-component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

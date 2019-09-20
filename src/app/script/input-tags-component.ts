@@ -1,6 +1,6 @@
 import {LitElement, html} from 'lit-element';
 
-class DropDownSearchWebComponent extends LitElement {
+class InputTagsWebComponent extends LitElement {
   private searchResult: [];
   private selectedItem: string;
   private isSelected: boolean;
@@ -31,82 +31,92 @@ class DropDownSearchWebComponent extends LitElement {
   render() {
     return html`
       <style>
-        .autocom:focus{
-            outline: none;
-        }
-        .autocom{
-             width: 100%;
-             height: 25px;
-             margin: 0;
-             border-top: 0;
-             border-left: 0;
-             border-right: 0;
-             border-bottom: 1px;
-             border-style: solid;
-             padding: 0;
-             font-size: 14px;
-             color: #4a4a4a;
-             line-height: 1.8px;
-             border-color: #4a4a4a;
-        }
-        .autocom-container ul{
-            padding: 0px;
-        }
-        .autocom-container ul li{
-            list-style: none;
-            padding: 15px;
-            cursor: pointer;
-        }
-        .autocom-container ul li:hover{
-            background: #1a8099;
-            color: #ffffff;
-        }
-        .drop-down-box{
-             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-             max-height: 250px;
-             overflow: auto;
-             position: absolute;
-             background: #ffffff;
-             right: 0;
-             left: 0;
-             width: inherit;
-        }
-        #close-icon {
-          color: #4a4a4a;
-          font-family: 'Helvetica', 'Arial', sans-serif;
-          text-align: right;
-          width: 20px;
-          height: 20px;
-          border-radius: 1px;
-          position: absolute;
-          cursor: pointer;
-      }
-      .drop-down-box{
-        display: none;
+      #tags {
+        max-width: 600px;
+        border-bottom: 1px solid #4a4a4a;
+        padding: 5px;
+        padding-left:0px;
+    }
+    #tags .tag {
+        display: flex;
+        float: left;
+        color: #FFFFFF;
+        background: gray;
+        padding: 4px 22px 6px 8px;
+        border-radius: 10px;
+        line-height: 12px;
+        transition: all 0.3s ease-in-out;
+        margin-right: 5px;
+        margin-top: 1px;
+    }
+    #tags .tag .close {
+        background: #1a8099;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: background 0.3s;
+        margin-right: -15px;
+        margin-left: 5px;
+    }
+    #tags .tag .close:after {
+        content: "×";
+        font-weight: 900;
+        float: right;
+    }
+    #add_tag{
+      outline: none;
+      border: none;
+    }
+    .autocom-container ul{
+      padding: 0px;
+  }
+  .autocom-container ul li{
+      list-style: none;
+      padding: 15px;
+      cursor: pointer;
+  }
+  .autocom-container ul li:hover{
+      background: #1a8099;
+      color: #ffffff;
+  }
+  .drop-down-box{
+       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+       max-height: 250px;
+       overflow: auto;
+       position: absolute;
+       background: #ffffff;
+       right: 0;
+       left: 0;
+       width: inherit;
+       display: none;
         margin-left: 10px;
-      }
+  }
       </style>
       <div class="autocom-container" style="width: ${this.width}px">
-       ${this.isSet ? html`<div id="close-icon" @click=${this.clearField} style="left: ${this.width - 10}px;">
-         <span id="x">X</span>
-      </div>` : ''}
-      <input name="autocom" placeholder=${this.placeholder} .value="${this.selectedItem}" class="autocom" type="text"  @keyup=${this.filter}>
-      <div class="drop-down-box" id="list-container">
+      <div id="tags">
+        <div id="tag-wrapper">
+        </div>
+        <div id="input-wrapper">
+          <input type="text" id="add_tag" 
+          placeholder=${this.placeholder} .value="${this.selectedItem}" @keyup=${this.filter}>
+        </div>
+      </div>
+       <div class="drop-down-box" id="list-container">
          <ul id="list">
-            ${this.searchResult.map((item, index) => html`<li @click=${this.selectItem.bind(this, item)} id=${index}>${item['name']}</li>`)}
+            ${this.searchResult.map((item) => html`<li @click=${this.selectItem.bind(this, item)}>${item['name']}</li>`)}
          </ul>
-       </div>
-       </div>`
+       </div></div>`;
   }
   /*
    * TO Select item from search list
    */
   selectItem(item) {
-    this.selectedItem = item.name;
+    this.selectedItem = null;
     this.isSelected = false;
     this.isSet = true;
     this.shadowRoot.getElementById('list-container').style.display = 'none';
-    // --- TO retun value to parent component ---//
+    this.shadowRoot.getElementById('tag-wrapper')
+    .insertAdjacentHTML('beforeend', '<div class="tag"><div>' + item.name + '</div><div class="close"></div><div>');
+ // --- TO retun value to parent component ---//
     this.dispatchEvent(new CustomEvent('on-change', {
       detail: item
     }));
@@ -127,9 +137,9 @@ class DropDownSearchWebComponent extends LitElement {
         this.loadData(this.url);
       }
     });
-
+   
   }
-
+ 
   loadData(url) {
     const self = this;
     const xhttp = new XMLHttpRequest();
@@ -143,9 +153,8 @@ class DropDownSearchWebComponent extends LitElement {
     xhttp.send();
   }
 
-  filter($event) {
-
-      this.isSelected = true;
+  filter($event){
+    this.isSelected = true;
       this.shadowRoot.getElementById('list-container').style.display = 'block';
       this.shadowRoot.querySelectorAll('#list li').forEach((val, index) => {
         const txtValue = val.textContent;
@@ -157,4 +166,4 @@ class DropDownSearchWebComponent extends LitElement {
       });
   }
 }
-customElements.define('dropdown-search-component', DropDownSearchWebComponent);
+customElements.define('input-tags-component', InputTagsWebComponent);

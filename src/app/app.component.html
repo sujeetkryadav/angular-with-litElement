@@ -16,11 +16,10 @@
     </dropdown-search-component>
 </div>
 <div class="field-wrapper">
-  <dropdown-search-component
+  <input-tags-component
     [url]="recipientUrl"
     [placeholder]="'Please select a recipient'"
     [width]="400"
-    (on-change)="onChangeRecipient($event)">
-
-  </dropdown-search-component>
+    (on-change)="onChangeService($event)">
+  </input-tags-component>
 </div>
