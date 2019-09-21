@@ -8,6 +8,7 @@ class InputTagsWebComponent extends LitElement {
   private width: number;
   private isSet: boolean;
   private placeholder: string;
+  private userList: any;
   static get properties() {
     return {
       searchResult: {type: []} ,
@@ -16,7 +17,8 @@ class InputTagsWebComponent extends LitElement {
       isSet: {type: Boolean},
       url: {type: String},
       width: {type: Number},
-      placeholder: {type: String}
+      placeholder: {type: String},
+      userList: {type: []},
     };
   }
 
@@ -27,6 +29,7 @@ class InputTagsWebComponent extends LitElement {
     this.isSelected = false;
     this.width = 200;
     this.isSet = false;
+    this.userList = [];
   }
   render() {
     return html`
@@ -94,17 +97,20 @@ class InputTagsWebComponent extends LitElement {
       <div class="autocom-container" style="width: ${this.width}px">
       <div id="tags">
         <div id="tag-wrapper">
+        ${this.userList.map((item) => html`<div class="tag"><div>${item['name']}</div><div class="close" @click=${this.removeUser.bind(this, item)}></div><div>`)}
         </div>
         <div id="input-wrapper">
           <input type="text" id="add_tag" 
           placeholder=${this.placeholder} .value="${this.selectedItem}" @keyup=${this.filter}>
         </div>
       </div>
+      
        <div class="drop-down-box" id="list-container">
          <ul id="list">
             ${this.searchResult.map((item) => html`<li @click=${this.selectItem.bind(this, item)}>${item['name']}</li>`)}
          </ul>
        </div></div>`;
+
   }
   /*
    * TO Select item from search list
@@ -114,11 +120,14 @@ class InputTagsWebComponent extends LitElement {
     this.isSelected = false;
     this.isSet = true;
     this.shadowRoot.getElementById('list-container').style.display = 'none';
-    this.shadowRoot.getElementById('tag-wrapper')
-    .insertAdjacentHTML('beforeend', '<div class="tag"><div>' + item.name + '</div><div class="close"></div><div>');
- // --- TO retun value to parent component ---//
+    if(this.userList.indexOf(item) === -1){
+      this.userList.push(item);
+      // this.shadowRoot.getElementById('tag-wrapper')
+      // .insertAdjacentHTML('beforeend', '<div class="tag"><div>'+item.name+'</div><div class="close"></div><div>');
+    }
+    // --- TO retun value to parent component ---//
     this.dispatchEvent(new CustomEvent('on-change', {
-      detail: item
+      detail: this.userList
     }));
   }
   /*
@@ -137,9 +146,9 @@ class InputTagsWebComponent extends LitElement {
         this.loadData(this.url);
       }
     });
-   
+
   }
- 
+
   loadData(url) {
     const self = this;
     const xhttp = new XMLHttpRequest();
@@ -155,15 +164,24 @@ class InputTagsWebComponent extends LitElement {
 
   filter($event){
     this.isSelected = true;
-      this.shadowRoot.getElementById('list-container').style.display = 'block';
-      this.shadowRoot.querySelectorAll('#list li').forEach((val, index) => {
-        const txtValue = val.textContent;
-        if (txtValue.toUpperCase().indexOf($event.target.value.toUpperCase()) > -1) {
-          val['style'].display = 'block';
-        } else {
-          val['style'].display = 'none';
-        }
-      });
+    this.shadowRoot.getElementById('list-container').style.display = 'block';
+    this.shadowRoot.querySelectorAll('#list li').forEach((val, index) => {
+      const txtValue = val.textContent;
+      if (txtValue.toUpperCase().indexOf($event.target.value.toUpperCase()) > -1) {
+        val['style'].display = 'block';
+      } else {
+        val['style'].display = 'none';
+      }
+    });
+  }
+  removeUser(item){
+    const indexToDelete = this.userList.indexOf(item);
+    this.userList = this.userList.filter(
+      (toDelete, index) => index !== indexToDelete
+    );
+    this.dispatchEvent(new CustomEvent('on-change', {
+      detail: this.userList
+    }));
   }
 }
 customElements.define('input-tags-component', InputTagsWebComponent);
