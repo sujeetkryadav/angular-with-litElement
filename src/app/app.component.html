@@ -1,4 +1,4 @@
-
+<h1>Welcome to Angular</h1>
 <div class="field-wrapper">
   <autocomplete-component [width]="400"
                           [url]="url"
@@ -11,6 +11,10 @@
       [url]="serviceUrl"
       [placeholder]="'Please select a service'"
       [width]="400"
+      [static]="'true'"
+      [searchable]="'true'"
+      [data]="data"
+      [multiple]="'false'"
       (on-change)="onChangeService($event)">
 
     </dropdown-search-component>
